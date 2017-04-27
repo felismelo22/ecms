@@ -1,9 +1,9 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>Landing Page - Start Bootstrap Theme</title>
+<meta name="description" content="bikin web murah dan mudah">
+<meta name="author" content="esoftgreat">
+<title>esoftgreat</title>
 <link href="<?php echo base_url().'templates/admin/'; ?>css/bootstrap.min.css" rel="stylesheet">
 <link href="<?php echo base_url().'templates/land_page/'; ?>css/landing-page.css" rel="stylesheet">
 <link href="<?php echo base_url().'templates/admin/'; ?>font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
