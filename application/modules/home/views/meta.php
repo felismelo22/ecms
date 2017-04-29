@@ -2,7 +2,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="bikin web murah dan mudah">
+<meta name="keywords" content="web, website, jual, beli, murah, bagus, kerjasama, jepara">
+<meta name="developer" content="esoftgreat.com">
 <meta name="author" content="esoftgreat">
+<meta name="ROBOTS" content="all, index, follow">
 <title>esoftgreat</title>
 <link href="<?php echo base_url().'templates/admin/'; ?>css/bootstrap.min.css" rel="stylesheet">
 <link href="<?php echo base_url().'templates/land_page/'; ?>css/landing-page.css" rel="stylesheet">

@@ -27,7 +27,7 @@ $this->session->__set('link_js', base_url().'templates/admin/modules/user/js/scr
 				<!-- <img src="<?php echo base_url().'images/logo.png' ?>" style="width: 100%;"> -->
 				<img src="<?php echo image_upload('logo.png'); ?>" style="width: 100%;">
 			</div>
-			<form method="post" action="<?php echo base_url('user/login') ?>">
+			<form method="post" action="<?php echo base_url('admin/login') ?>">
 				<label>username</label>
 				<input type="text" name="username" class="form-control">
 				<label>password</label>

@@ -3,54 +3,54 @@ if(!empty($msg)&&!empty($alert))
 {
 	msg($msg,$alert);
 }
-// $this->session->__set('link_js', base_url().'templates/admin/modules/user/js/script.js');
+$this->session->__set('link_js', base_url().'templates/admin/modules/user/js/script.js');
 
-// if(!empty($data_user))
-// {
-// 	$user_value = $data_user['username'];
-// }
-// if(!empty($data_user))
-// {
-// 	pr($data_user);
-// }
+if(!empty($data_user))
+{
+	$user_value = $data_user['username'];
+}
+if(!empty($data_user))
+{
+	pr($data_user);
+}
 $id = @intval($data_user['id']);
 ?>
-<?php echo form_open(base_url('content/cat_edit/'.$id), 'id="cat_edit"');?>
+<?php echo form_open(base_url('admin/user_edit/'.$id), 'id="user_edit"');?>
 	<div class="panel panel-default">
 		<div class="panel panel-heading">
 			<h4 class="panel-title">
-				<?php echo 'Add Category'; ?>
+				<?php echo !empty($id) ? 'Edit ' : 'Add '; echo ucfirst($module); ?>
 			</h4>
 		</div>
 		<div class="panel panel-body">
 			<?php
 			echo form_hidden('id',$id);
-			echo form_label('Title', 'title');
+			echo form_label('Username', 'username');
 			if($id>0)
 			{
 				echo form_label(@$user_value, @$user_value,array('class'=>'form-control'));
 			}else{
 				echo form_input(array(
-					'name'     => 'title',
+					'name'     => 'username',
 					'required' => 'required',
 					'class'    => 'form-control',
 					'value'    => @$user_value));
-				echo '			<div id="title_error"></div>';
+				echo '			<div id="user_error"></div>';
 			}
-			// echo form_label('Image', 'image');
-			// echo form_upload(array(
-			// 	'name'     => 'title',
-			// 	'required' => 'required',
-			// 	'class'    => 'form-control',
-			// 	'value'    => ''));
-			// echo '			<div id="title_error"></div>';
-			echo form_label('description', 'description');
-			echo form_textarea(array(
-				'name'     => 'description',
+			echo form_label('Password', 'password');
+			echo form_password(array(
+				'name'     => 'password',
 				'required' => 'required',
 				'class'    => 'form-control',
-				'value'    => @$user_value));
+				'value'    => ''));
+			echo form_label('Re-Type Password', 're-password');
+			echo form_password(array(
+				'name'     => 're-password',
+				'required' => 'required',
+				'class'    => 'form-control',
+				'value'    => ''));
 			?>
+			<div id="pass_error"></div>
 		</div>
 		<div class="panel panel-footer">
 			<?php
