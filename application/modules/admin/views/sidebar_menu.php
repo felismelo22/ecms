@@ -9,7 +9,7 @@
 				<a href="<?php echo base_url('admin/user_list') ?>">User List</a>
 			</li>
 			<li>
-				<a href="<?php echo base_url('admin/user_add') ?>">User Add</a>
+				<a href="<?php echo base_url('admin/user_edit') ?>">User Add</a>
 			</li>
 		</ul>
 	</li>

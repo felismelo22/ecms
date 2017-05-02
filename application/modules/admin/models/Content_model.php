@@ -1,13 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin_model extends CI_Model
+class Content_model extends CI_Model
 {
 	public function __construct()
 	{
 		$this->load->database();
 	}
 
-	public function get_user($id = 0)
+	public function get_cat($id = 0)
 	{
 		// if ($username === FALSE || $id ===0)
 		// {
@@ -16,12 +16,24 @@ class Admin_model extends CI_Model
 		// 	return $query->result_array();
 		// }
 
-		$query = $this->db->get_where('user', array('id' => $id));
+		$query = $this->db->get_where('content_cat', array('id' => $id));
 
 		return $query->row_array();
 	}
 
-	public function get_all_user($page = 0, $keyword = NULL)
+	public function get_cat_row($where = '')
+	{
+		$sql = !empty($where) ? $where : '';
+		$query = $this->db->query('SELECT * FROM content_cat '.$sql);
+		return $query->row_array();
+	}
+
+	public function get_cat_ids()
+	{
+		$query = $this->db->query('SELECT `id`,`title` FROM `content_cat` WHERE 1 AND `publish` = 1');
+		return $query->result_array();
+	}
+	public function get_cat_list($page = 0, $keyword = NULL)
 	{
 		$data = array();
     $url_get = '';
@@ -41,13 +53,13 @@ class Admin_model extends CI_Model
     }
     if($keyword==NULL)
     {
-      $total_rows = $this->db->count_all('user');
+      $total_rows = $this->db->count_all('content_cat');
     }else{
-      $query = $this->db->query('SELECT id FROM user WHERE id = "'.$keyword.'" OR username = "'.$keyword.'" ORDER BY ID DESC');
+      $query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` ORDER BY sort,id');
       $total_rows = $query->num_rows();
     }
 
-    $config['base_url']   = base_url('admin/user_list').$url_get;
+    $config['base_url']   = base_url('admin/content_category').$url_get;
     $config['total_rows'] = $total_rows;
     $config['per_page']   = $limit;
     $config['full_tag_open'] = '<ul class="pagination" style="margin-top: 0;margin-bottom: 0;">';
@@ -82,11 +94,12 @@ class Admin_model extends CI_Model
 		{
 			$this->db->or_where(array(
 																'id'=>$keyword,
-																'username'=>$keyword
+																'title'=>$keyword
 															));
 		}
-		$query = $this->db->get('user');
-		$data['data_user'] = $query->result_array();
+		$query = $this->db->get('content_cat');
+		$query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` ORDER BY sort,id');
+		$data['cat_list'] = $query->result_array();
 		return $data;
 
 		// untuk menampilkan query terakhir
@@ -94,21 +107,20 @@ class Admin_model extends CI_Model
 
 	}
 
-	public function set_user($id = 0)
+	public function set_cat($id = 0)
 	{
 		$this->load->helper('url');
 
 		$data = array(
-			'email' => $this->input->post('email'),
-			'username' => $this->input->post('username'),
-			'password' => md5($this->input->post('password')),
-			'role' => $this->input->post('role')
+			'title' => $this->input->post('title'),
+			'par_id' => $this->input->post('par_id'),
+			'description' => $this->input->post('description')
 		);
 		if($id > 0)
 		{
-			return $this->db->update('user', $data, 'id = '.$id);
+			return $this->db->update('content_cat', $data, 'id = '.$id);
 		}else{
-			return $this->db->insert('user', $data);
+			return $this->db->insert('content_cat', $data);
 		}
 	}
 

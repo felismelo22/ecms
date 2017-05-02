@@ -18,7 +18,6 @@ if(!empty(@$this->session->userdata['logged_in']))
 	$data['module']  = $mod['name'];
 
 	$this->session->__set('link_js','');
-
 	$this->load->view('admin/home',$data);
 }else{
 	$this->load->view('user/login');

@@ -26,6 +26,7 @@
 						$data['alert']  = @$alert;
 						$data['module'] = @$module;
 						$data['task']   = @$task;
+						pr($content);
 						$this->load->view($content, $data);
 						pr(@($this->session));
 					?>
