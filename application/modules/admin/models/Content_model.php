@@ -7,6 +7,7 @@ class Content_model extends CI_Model
 		$this->load->database();
 	}
 
+	/*get*/
 	public function get_cat($id = 0)
 	{
 		// if ($username === FALSE || $id ===0)
@@ -37,7 +38,7 @@ class Content_model extends CI_Model
 	{
 		$data = array();
     $url_get = '';
-		$limit = 12;
+		$limit = 3;
 
     if(!empty($_GET))
     {
@@ -55,7 +56,7 @@ class Content_model extends CI_Model
     {
       $total_rows = $this->db->count_all('content_cat');
     }else{
-      $query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` ORDER BY sort,id');
+      $query = $this->db->query('SELECT id FROM `content_cat` WHERE id = "'.$keyword.'" OR title LIKE "'.$keyword.'%"');
       $total_rows = $query->num_rows();
     }
 
@@ -89,16 +90,11 @@ class Content_model extends CI_Model
 			$page = $page-1;
 		}
 		$page = @intval($page)*$limit;
-		$this->db->limit($limit,$page);
 		if($keyword != NULL)
 		{
-			$this->db->or_where(array(
-																'id'=>$keyword,
-																'title'=>$keyword
-															));
+			$sql = ' WHERE id = "'.$keyword.'" OR title LIKE "'.$keyword.'%"';
 		}
-		$query = $this->db->get('content_cat');
-		$query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` ORDER BY sort,id');
+		$query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` '.@$sql.' ORDER BY sort,id LIMIT '.$page.','.$limit);
 		$data['cat_list'] = $query->result_array();
 		return $data;
 
@@ -107,6 +103,7 @@ class Content_model extends CI_Model
 
 	}
 
+	/*set*/
 	public function set_cat($id = 0)
 	{
 		$this->load->helper('url');
@@ -114,7 +111,8 @@ class Content_model extends CI_Model
 		$data = array(
 			'title' => $this->input->post('title'),
 			'par_id' => $this->input->post('par_id'),
-			'description' => $this->input->post('description')
+			'description' => $this->input->post('description'),
+			'publish' => $this->input->post('publish')
 		);
 		if($id > 0)
 		{
@@ -124,6 +122,7 @@ class Content_model extends CI_Model
 		}
 	}
 
+	/*del*/
 	public function del_user($ids = array())
 	{
 		if(!empty($ids))
@@ -135,11 +134,6 @@ class Content_model extends CI_Model
 		}
 	}
 
-	public function login($username = NULL, $password = NULL)
-	{
-		$query = $this->db->get_where('user', array('username' => $username, 'password'=>md5($password)));
-		return $query->row_array();
-	}
 	public function is_exist($username = NULL, $id = 0)
 	{
 		if($id == NULL)

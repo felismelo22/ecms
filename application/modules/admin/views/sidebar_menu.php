@@ -17,7 +17,7 @@
 		<a href="javascript:;" data-toggle="collapse" data-target="#content"><i class="fa fa-fw fa-file-text"></i> Content <i class="fa fa-fw fa-caret-down"></i></a>
 		<ul id="content" class="collapse">
 			<li>
-				<a href="<?php echo base_url('admin/cat_list') ?>">Category</a>
+				<a href="<?php echo base_url('admin/content_category') ?>">Category</a>
 			</li>
 		</ul>
 	</li>

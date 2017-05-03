@@ -61,6 +61,9 @@ $par_id     = @intval($data_cat['par_id']);
 					'class'    => 'form-control',
 					'rows' => '2',
 					'value'    => @$user_value));
+				echo form_label('Publish', 'publish');
+				echo '<br>';
+				echo form_checkbox('publish', '1', TRUE).' Published';
 				?>
 			</div>
 			<div class="panel panel-footer">
@@ -86,7 +89,7 @@ $par_id     = @intval($data_cat['par_id']);
 </div>
 <div class="col-md-8">
 	<form method="get" action="<?php echo base_url('admin/content_category') ?>" class="form-inline pull-right">
-		<input type="text" name="keyword" class="form-control" placeholder="keyword">
+		<input type="text" name="keyword" class="form-control" placeholder="keyword" value="<?php echo @$_GET['keyword'] ?>">
 		<button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-search"></span></button>
 	</form>
 	<hr>
@@ -96,18 +99,18 @@ $par_id     = @intval($data_cat['par_id']);
 	{
 		msg($msg,$alert);
 	}
-	$this->session->__set('link_js', base_url().'templates/admin/modules/user/js/script.js');
+	$this->session->__set('link_js', base_url().'templates/admin/modules/content/js/script.js');
 	?>
 	<form method="post" action="<?php echo base_url('user/list'); ?>">
 		<div class="table-responsive">
 			<table class="table table-bordered table-hover table-striped">
 				<thead>
 					<tr>
-						<th>id</th>
-						<th>parent id</th>
+						<!-- <th>id</th> -->
+						<!-- <th>parent id</th> -->
 						<th>title</th>
-						<th>Created</th>
-						<th><input id="selectAll" type="checkbox">Action</th>
+						<th><input id="selectAllPub" type="checkbox">Publish</th>
+						<th><input id="selectAllDel" type="checkbox">Delete</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -118,15 +121,15 @@ $par_id     = @intval($data_cat['par_id']);
 						{
 							?>
 							<tr data-id="<?php echo $value['id'] ?>">
-								<td>
+								<!-- <td>
 									<?php echo $value['id'] ?>
-								</td>
-								<td>
+								</td> -->
+								<!-- <td>
 									<?php echo $value['par_id'] ?>
-								</td>
+								</td> -->
 								<td><a href="<?php echo base_url('admin/user_edit/'.$value['id']) ?>"><?php echo $value['title'] ?></a></td>
-								<td><?php echo $value['created'] ?></td>
-								<td><input type="checkbox" name="del_cat[]" value="<?php echo $value['id']; ?>"> <span class="glyphicon glyphicon-trash"></span></td>
+								<td><input type="checkbox" class="pub_check" name="pub_cat[]" value="<?php echo $value['id']; ?>"> Publish</td>
+								<td><input type="checkbox" class="del_check" name="del_cat[]" value="<?php echo $value['id']; ?>"> <span class="glyphicon glyphicon-trash"></span></td>
 							</tr>
 							<?php
 						}

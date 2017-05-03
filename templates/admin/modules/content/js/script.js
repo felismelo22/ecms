@@ -1,12 +1,23 @@
 $(document).ready(function(){
-	$('input[name="title"]').on('focusout', function(){
+	$('input[name="re-password"]').on('focusout', function(){
+		var a = $('#user_edit').find('input[name="password"]').val();
+		var b = $(this).val();
+		if(a!=b){
+			$('#pass_error').html('<div class="alert alert-danger">'+
+	  		'<strong>danger !</strong> password tidak cocok.'+
+				'</div>');
+		}else{
+			$('#pass_error').html('');
+		}
+	});
+	$('input[name="username"]').on('focusout', function(){
 		var a = $(this).val();
 		var b = $(this).siblings('input[name="id"]').val();
 		$.ajax({
 		  type: "GET",
-		  url:  _url+"admin/content_category",
+		  url:  _url+"user/check_exist",
 		  data: {
-		  	"title": a,
+		  	"username": a,
 		  	"id": b
 		  },
 		  dataType: "json",
@@ -26,15 +37,9 @@ $(document).ready(function(){
 		  },
 		});
 	});
-	$('#selectAllDel').on('click',function() {
+	$('#selectAll').on('click',function() {
 	  var checkedStatus = this.checked;
-	  $('input[class="del_check"]').each(function() {
-	    $(this).prop('checked', checkedStatus);
-	  });
-	});
-	$('#selectAllPub').on('click',function() {
-	  var checkedStatus = this.checked;
-	  $('input[class="pub_check"]').each(function() {
+	  $('input[type="checkbox"]').each(function() {
 	    $(this).prop('checked', checkedStatus);
 	  });
 	});

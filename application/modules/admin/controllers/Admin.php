@@ -74,10 +74,6 @@ class Admin extends CI_Controller
     {
       $data['msg'] = '';
       $data['alert'] = '';
-      // if($username != NULL)
-      // {
-      //   $data['data_user']  = $this->admin_model->get_user($username);
-      // }
       if($id != 0)
       {
         $data['data_user']  = $this->admin_model->get_user($id);
@@ -121,16 +117,12 @@ class Admin extends CI_Controller
 
     if ($this->form_validation->run() === FALSE)
     {
-      $data['msg'] = '';
-      $data['alert'] = '';
-      // if($username != NULL)
-      // {
-      //   $data['data_user']  = $this->admin_model->get_user($username);
-      // }
+      $data['msg']           = '';
+      $data['alert']         = '';
       $data['parent']        = $this->content_model->get_cat_ids();
       $data['data_cat_list'] = $this->content_model->get_cat_list();
-      // pr($this->db->last_query());die();
       $parent                = array();
+    // pr($this->db->last_query());die();
 
       foreach ($data['parent'] as $key => $value)
       {
