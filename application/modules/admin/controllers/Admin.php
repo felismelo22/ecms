@@ -136,6 +136,8 @@ class Admin extends CI_Controller
       }
       $this->load->view('admin/index', $data);
     }else{
+      // pr($this->input->post());
+      // pr($_POST);die();
       $title  = $this->input->post('title');
       $par_id = $this->input->post('par_id');
       if($id > 0)
@@ -156,7 +158,7 @@ class Admin extends CI_Controller
         }
         // $data['data_cat']  = $this->content_model->get_cat($id);
 
-        $this->content_model->set_user();
+        // $this->content_model->set_user();
       }else{
 
         $cat_row       = $this->content_model->get_cat_row('WHERE par_id = '.$par_id.' AND title = "'.$title.'"');
@@ -184,5 +186,14 @@ class Admin extends CI_Controller
 
       $this->load->view('admin/index', $data);
     }
+  }
+  public function content_edit($id = 0)
+  {
+    $this->load->helper('form');
+    $this->load->library('form_validation');
+
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $data['test'] = '';
+    $this->load->view('admin/index', $data);
   }
 }

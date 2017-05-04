@@ -7,5 +7,5 @@ $(document).ready(function(){
 		}
 	}
 	li_active();
-	$();
+	CKEDITOR.replace('textckeditor');
 });

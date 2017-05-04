@@ -18,13 +18,14 @@ $pagination = $data_cat_list['pagination'];
 $cat_list   = $data_cat_list['cat_list'];
 $id         = !empty(@intval($data_cat['id'])) ? $data_cat['id'] : '';
 $par_id     = @intval($data_cat['par_id']);
+pr(@$data_cat);
 ?>
 <div class="col-md-4">
 	<?php echo form_open(base_url('admin/content_category/'.$id), 'id="cat_edit"');?>
 		<div class="panel panel-default">
 			<div class="panel panel-heading">
 				<h4 class="panel-title">
-					<?php echo 'Add Category'; ?>
+					<?php echo !empty($id) ? 'Edit' : 'Add'; echo ' Category'; ?>
 				</h4>
 			</div>
 			<div class="panel panel-body">
@@ -37,17 +38,12 @@ $par_id     = @intval($data_cat['par_id']);
 					'options' => $parent,
 					'selected'=> $par_id));
 				echo form_label('Title', 'title');
-				if($id>0)
-				{
-					echo form_label(@$user_value, @$user_value,array('class'=>'form-control'));
-				}else{
-					echo form_input(array(
-						'name'     => 'title',
-						'required' => 'required',
-						'class'    => 'form-control',
-						'value'    => @$user_value));
-					echo '			<div id="title_error"></div>';
-				}
+				echo form_input(array(
+					'name'     => 'title',
+					'required' => 'required',
+					'class'    => 'form-control',
+					'value'    => @$data_cat['title']));
+				echo '			<div id="title_error"></div>';
 				// echo form_label('Image', 'image');
 				// echo form_upload(array(
 				// 	'name'     => 'title',
@@ -57,13 +53,14 @@ $par_id     = @intval($data_cat['par_id']);
 				// echo '			<div id="title_error"></div>';
 				echo form_label('description', 'description');
 				echo form_textarea(array(
-					'name'     => 'description',
-					'class'    => 'form-control',
-					'rows' => '2',
-					'value'    => @$user_value));
+					'name'  => 'description',
+					'id'    => 'textckeditor',
+					'class' => 'form-control',
+					'rows'  => '2',
+					'value' => @$data_cat['description']));
 				echo form_label('Publish', 'publish');
 				echo '<br>';
-				echo form_checkbox('publish', '1', TRUE).' Published';
+				echo form_checkbox('publish', @intval($data_cat['publish']), @intval($data_cat['publish'])).' Published';
 				?>
 			</div>
 			<div class="panel panel-footer">
@@ -127,8 +124,14 @@ $par_id     = @intval($data_cat['par_id']);
 								<!-- <td>
 									<?php echo $value['par_id'] ?>
 								</td> -->
-								<td><a href="<?php echo base_url('admin/user_edit/'.$value['id']) ?>"><?php echo $value['title'] ?></a></td>
-								<td><input type="checkbox" class="pub_check" name="pub_cat[]" value="<?php echo $value['id']; ?>"> Publish</td>
+								<td><a href="<?php echo base_url('admin/content_category/'.$value['id']) ?>"><?php echo $value['title'] ?></a></td>
+								<td>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" class="pub_check" name="pub_cat[]" value="<?php echo $value['id']; ?>" <?php echo !empty($value['publish']) ? 'checked':''; ?>> Publish
+										</label>
+									</div>
+								</td>
 								<td><input type="checkbox" class="del_check" name="del_cat[]" value="<?php echo $value['id']; ?>"> <span class="glyphicon glyphicon-trash"></span></td>
 							</tr>
 							<?php
@@ -158,3 +161,7 @@ $par_id     = @intval($data_cat['par_id']);
 		</div>
 	</form>
 </div>
+
+<!-- <script type="text/javascript">
+	CKEDITOR.replace('textckeditor');
+</script> -->

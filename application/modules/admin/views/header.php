@@ -8,6 +8,7 @@
 <link href="<?php echo base_url().'templates/admin/'; ?>css/sb-admin.css" rel="stylesheet">
 <link href="<?php echo base_url().'templates/admin/'; ?>css/plugins/morris.css" rel="stylesheet">
 <link href="<?php echo base_url().'templates/admin/'; ?>font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!-- <script src="//cdn.ckeditor.com/4.5.5/standard/ckeditor.js"></script> -->
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>

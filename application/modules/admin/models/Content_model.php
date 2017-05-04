@@ -112,7 +112,7 @@ class Content_model extends CI_Model
 			'title' => $this->input->post('title'),
 			'par_id' => $this->input->post('par_id'),
 			'description' => $this->input->post('description'),
-			'publish' => $this->input->post('publish')
+			'publish' => @intval($this->input->post('publish'))
 		);
 		if($id > 0)
 		{
