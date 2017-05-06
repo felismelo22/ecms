@@ -6,6 +6,7 @@
 <hr>
 <div class="clearfix"></div>
 <?php
+pr($_POST);
 if(!empty($msg)&&!empty($alert))
 {
 	msg($msg,$alert);
@@ -43,6 +44,7 @@ if(!empty($msg)&&!empty($alert))
 					{
 						?>
 						<tr data-id="<?php echo $value['id'] ?>">
+							<input type="hidden" name="id[]" value="<?php echo $value['id'] ?>">
 							<td><a href="<?php echo base_url('admin/content_edit/'.$value['id']) ?>"><?php echo $value['id'] ?></a></td>
 							<td><img src="<?php echo content_image($value['image'],$value['id']); ?>" data-toggle="modal" data-target="#cat_img_<?php echo $value['id']?>" class="img-thumbnail img-responsive" style="cursor:pointer; object-fit: cover;width: 30px;height: 30px;"></td>
 							<!-- <td><a href="<?php echo base_url('admin/content_category/'.$value['id']) ?>"><?php echo $value['image'] ?></a></td> -->
@@ -50,14 +52,14 @@ if(!empty($msg)&&!empty($alert))
 							<td>
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" class="pub_check" name="pub_cat[]" value="<?php echo $value['id']; ?>" <?php echo !empty($value['publish']) ? 'checked':''; ?>> Publish
+										<input type="checkbox" class="pub_check" name="pub_content[]" value="<?php echo $value['id']; ?>" <?php echo !empty($value['publish']) ? 'checked':''; ?>> Publish
 									</label>
 								</div>
 							</td>
 							<td>
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" class="del_check" name="del_cat[]" value="<?php echo $value['id']; ?>"> <span class="glyphicon glyphicon-trash"></span>
+										<input type="checkbox" class="del_check" name="del_content[]" value="<?php echo $value['id']; ?>"> <span class="glyphicon glyphicon-trash"></span>
 									</label>
 								</div>
 							</td>

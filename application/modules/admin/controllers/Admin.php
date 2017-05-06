@@ -85,7 +85,7 @@ class Admin extends CI_Controller
       if(valid_email($email))
       {
         if($id > 0)
-        {pr($_POST);
+        {
           $this->admin_model->set_user($id);
           $data['data_user']  = $this->admin_model->get_user($id);
         }else{
@@ -193,6 +193,20 @@ class Admin extends CI_Controller
       $parent[0] = 'None';
       $data['parent'] = $parent;
 
+      if(!empty($_POST['del_cat']))
+      {
+        $this->content_model->del_data('category',$_POST['del_cat']);
+        $data['msg']   = 'data berhasil dihapus';
+        $data['alert'] = 'success';
+      }
+
+      if(!empty($this->input->post('id')))
+      {
+        $this->content_model->update_data('category',$this->input->post('pub_cat'));
+        $data['msg']   = 'data berhasil di update';
+        $data['alert'] = 'success';
+      }
+
       $this->load->view('admin/index', $data);
     }
   }
@@ -265,6 +279,13 @@ class Admin extends CI_Controller
   }
   public function content_list()
   {
+
+    if(!empty($this->input->post('id')))
+    {
+      $this->content_model->publish_data('content', $this->input->post('pub_content'));
+      $data['msg']   = 'Content Updated Successfully';
+      $data['alert'] = 'success';
+    }
     $data['data'] = $this->content_model->get_content_list();
     $this->load->view('admin/index',$data);
   }

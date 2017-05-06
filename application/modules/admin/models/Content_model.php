@@ -147,6 +147,31 @@ class Content_model extends CI_Model
 		// pr($this->db->last_query());die();
 	}
 	/*set*/
+	public function publish_data($table = '', $ids = array(''))
+	{
+		if(!empty($table))
+		{
+			$data_id = $this->input->post('id');
+			if(!empty($data_id))
+			{
+				foreach ($data_id as $key => $id)
+				{
+					if(!empty($ids))
+					{
+						if(in_array($id, $ids))
+						{
+							$this->db->update($table, array('publish'=>1), 'id = '.$id);
+						}else{
+							$this->db->update($table, array('publish'=>0), 'id = '.$id);
+						}
+					}else{
+						$this->db->update($table, array('publish'=>0), 'id = '.$id);
+					}
+				}
+			}
+			}
+	}
+
 	public function set_cat($id = 0)
 	{
 		$this->load->helper('url');
@@ -255,13 +280,13 @@ class Content_model extends CI_Model
 	}
 
 	/*del*/
-	public function del_user($ids = array())
+	public function del_data($table='',$ids = array())
 	{
-		if(!empty($ids))
+		if(!empty($ids)&&!empty($table))
 		{
 			foreach ($ids as $key => $id)
 			{
-				$this->db->delete('user', array('id'=>$id));
+				$this->db->delete($table, array('id'=>$id));
 			}
 		}
 	}

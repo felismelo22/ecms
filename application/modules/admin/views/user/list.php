@@ -12,7 +12,7 @@ if(!empty($msg)&&!empty($alert))
 }
 $this->session->__set('link_js', base_url().'templates/admin/modules/user/js/script.js');
 ?>
-<form method="post" action="<?php echo base_url('user/list'); ?>">
+<form method="post" action="<?php echo base_url('admin/user_list'); ?>">
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>

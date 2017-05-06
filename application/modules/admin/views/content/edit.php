@@ -80,12 +80,12 @@ pr($data);
 				'class' => 'form-control',
 				'value' => @$data['content']));
 
-			echo form_label('Publish', 'publish');
 			echo form_label('Cagegory', 'category');
 			?>
 	 		<select name="cat_ids[]" multiple="multiple" id="cat_ids" size="<?php echo $cat_size; ?>" class="form-control">
 				<?php echo createOption($r_cat, $cat_ids);?>
 			</select><?php
+			echo form_label('Publish', 'publish');
 			echo '<div class="checkbox">';
 			echo '<label>';
 			echo form_checkbox(array(
