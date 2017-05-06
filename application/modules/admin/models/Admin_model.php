@@ -24,7 +24,7 @@ class Admin_model extends CI_Model
 	public function get_all_user($page = 0, $keyword = NULL)
 	{
 		$data = array();
-    $url_get = '';
+    $url_get = base_url('admin/user_list').'';
 		$limit = 12;
 
     if(!empty($_GET))
@@ -32,7 +32,7 @@ class Admin_model extends CI_Model
     	if(!empty($_GET['keyword']))
     	{
 	      $keyword = @$_GET['keyword'];
-	      $url_get = '?keyword='.$keyword;
+	      $url_get = base_url('admin/user_list').'?keyword='.$keyword;
     	}
       if(!empty($_GET['page']))
       {
@@ -47,30 +47,9 @@ class Admin_model extends CI_Model
       $total_rows = $query->num_rows();
     }
 
-    $config['base_url']   = base_url('admin/user_list').$url_get;
-    $config['total_rows'] = $total_rows;
-    $config['per_page']   = $limit;
-    $config['full_tag_open'] = '<ul class="pagination" style="margin-top: 0;margin-bottom: 0;">';
-    $config['num_tag_open'] = '<li>';
-    $config['num_tag_close'] = '</li>';
-    $config['first_tag_open'] = '<li>';
-    $config['first_tag_close'] = '</li>';
-    $config['last_tag_open'] = '<li>';
-    $config['last_tag_close'] = '</li>';
-    $config['cur_tag_open'] = '<li class="active"><a href="#">';
-    $config['cur_tag_close'] = '</a></li>';
-    $config['next_tag_open'] = '<li>';
-    $config['next_tag_close'] = '</li>';
-    $config['prev_tag_open'] = '<li>';
-    $config['prev_tag_close'] = '</li>';
-    $config['full_tag_close'] = '</ul>';
-    $config['enable_query_strings'] = TRUE;
-    $config['page_query_string'] = TRUE;
-    $config['query_string_segment'] = 'page';
-    $config['use_page_numbers'] = TRUE;
+    $config = pagination($total_rows,$limit,$url_get);
     $this->pagination->initialize($config);
-
-    $data['pagination'] = $this->pagination->create_links();
+  	$data['pagination'] = $this->pagination->create_links();
 
 		if($page>0)
 		{

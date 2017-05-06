@@ -20,7 +20,7 @@ $mod['task'] = $this->router->fetch_method();
 				</li>
 				<?php
 			}
-			pr($mod);
+			// pr($mod);
 			if(!empty($mod['task']) || $mod['task'] == 'admin')
 			{
 				?>

@@ -7,5 +7,18 @@ $(document).ready(function(){
 		}
 	}
 	li_active();
-	CKEDITOR.replace('textckeditor');
+	$('input[type="text"]').focus();
+	// CKEDITOR.replace('textckeditor');
+	$('#selectAllDel').on('click',function() {
+	  var checkedStatus = this.checked;
+	  $('input[class="del_check"]').each(function() {
+	    $(this).prop('checked', checkedStatus);
+	  });
+	});
+	$('#selectAllPub').on('click',function() {
+	  var checkedStatus = this.checked;
+	  $('input[class="pub_check"]').each(function() {
+	    $(this).prop('checked', checkedStatus);
+	  });
+	});
 });

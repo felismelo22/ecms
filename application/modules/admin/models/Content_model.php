@@ -22,7 +22,13 @@ class Content_model extends CI_Model
 		return $query->row_array();
 	}
 
-	public function get_cat_row($where = '')
+	public function get_cat_All($field = '*', $where = '')
+	{
+		$sql = !empty($where) ? $where : '';
+		$query = $this->db->query('SELECT '.$field.' FROM content_cat '.$sql);
+		return $query->result_array();
+	}
+	public function get_cat_data($where = '')
 	{
 		$sql = !empty($where) ? $where : '';
 		$query = $this->db->query('SELECT * FROM content_cat '.$sql);
@@ -37,7 +43,7 @@ class Content_model extends CI_Model
 	public function get_cat_list($page = 0, $keyword = NULL)
 	{
 		$data = array();
-    $url_get = '';
+    $url_get = base_url('admin/content_category').'';
 		$limit = 3;
 
     if(!empty($_GET))
@@ -45,7 +51,7 @@ class Content_model extends CI_Model
     	if(!empty($_GET['keyword']))
     	{
 	      $keyword = @$_GET['keyword'];
-	      $url_get = '?keyword='.$keyword;
+	      $url_get = base_url('admin/content_category').'?keyword='.$keyword;
     	}
       if(!empty($_GET['page']))
       {
@@ -59,31 +65,9 @@ class Content_model extends CI_Model
       $query = $this->db->query('SELECT id FROM `content_cat` WHERE id = "'.$keyword.'" OR title LIKE "'.$keyword.'%"');
       $total_rows = $query->num_rows();
     }
-
-    $config['base_url']   = base_url('admin/content_category').$url_get;
-    $config['total_rows'] = $total_rows;
-    $config['per_page']   = $limit;
-    $config['full_tag_open'] = '<ul class="pagination" style="margin-top: 0;margin-bottom: 0;">';
-    $config['num_tag_open'] = '<li>';
-    $config['num_tag_close'] = '</li>';
-    $config['first_tag_open'] = '<li>';
-    $config['first_tag_close'] = '</li>';
-    $config['last_tag_open'] = '<li>';
-    $config['last_tag_close'] = '</li>';
-    $config['cur_tag_open'] = '<li class="active"><a href="#">';
-    $config['cur_tag_close'] = '</a></li>';
-    $config['next_tag_open'] = '<li>';
-    $config['next_tag_close'] = '</li>';
-    $config['prev_tag_open'] = '<li>';
-    $config['prev_tag_close'] = '</li>';
-    $config['full_tag_close'] = '</ul>';
-    $config['enable_query_strings'] = TRUE;
-    $config['page_query_string'] = TRUE;
-    $config['query_string_segment'] = 'page';
-    $config['use_page_numbers'] = TRUE;
+    $config = pagination($total_rows,$limit,$url_get);
     $this->pagination->initialize($config);
-
-    $data['pagination'] = $this->pagination->create_links();
+  	$data['pagination'] = $this->pagination->create_links();
 
 		if($page>0)
 		{
@@ -97,28 +81,176 @@ class Content_model extends CI_Model
 		$query = $this->db->query('SELECT *,CASE WHEN par_id = 0 THEN id ELSE par_id END AS Sort FROM `content_cat` '.@$sql.' ORDER BY sort,id LIMIT '.$page.','.$limit);
 		$data['cat_list'] = $query->result_array();
 		return $data;
-
 		// untuk menampilkan query terakhir
 		// pr($this->db->last_query());die();
-
 	}
 
+	public function get_content($id = 0)
+	{
+		if(!empty($id))
+		{
+			$query = $this->db->get_where('content', array('id'=>$id));
+			return $query->row_array();
+		}
+	}
+
+	public function get_content_list($page = 0, $keyword = NULL)
+	{
+		$data = array();
+    $url_get = base_url('admin/content_list').'';
+		$limit = 3;
+
+    if(!empty($_GET))
+    {
+    	if(!empty($_GET['keyword']))
+    	{
+	      $keyword = @$_GET['keyword'];
+	      $url_get = base_url('admin/content_list').'?keyword='.$keyword;
+    	}
+      if(!empty($_GET['page']))
+      {
+      	$page = @intval($_GET['page']);
+      }
+    }
+    if($keyword==NULL)
+    {
+      $total_rows = $this->db->count_all('content');
+    }else{
+      $query = $this->db->query('SELECT id FROM `content` WHERE id = "'.$keyword.'" OR title LIKE "'.$keyword.'%"');
+      $total_rows = $query->num_rows();
+    }
+
+    $config = pagination($total_rows,$limit,$url_get);
+    $this->pagination->initialize($config);
+  	$data['pagination'] = $this->pagination->create_links();
+
+		if($page>0)
+		{
+			$page = $page-1;
+		}
+
+		$page = @intval($page)*$limit;
+		$this->db->limit($limit,$page);
+		if($keyword != NULL)
+		{
+			$this->db->or_where(array(
+																'id'=>$keyword,
+																'title'=>$keyword
+															));
+		}
+		// $this->db->select('id,title');
+		$query = $this->db->get('content');
+		$data['data'] = $query->result_array();
+
+		return $data;
+		// untuk menampilkan query terakhir
+		// pr($this->db->last_query());die();
+	}
 	/*set*/
 	public function set_cat($id = 0)
 	{
 		$this->load->helper('url');
 
+		// $description = trim($this->input->post('description'));
+		// $description = stripslashes($description);
+		// $description = htmlspecialchars($description);
+		$publish = !empty($this->input->post('publish')) ? 1:0;
 		$data = array(
 			'title' => $this->input->post('title'),
 			'par_id' => $this->input->post('par_id'),
 			'description' => $this->input->post('description'),
-			'publish' => @intval($this->input->post('publish'))
+			'publish' => $publish
 		);
 		if($id > 0)
 		{
 			return $this->db->update('content_cat', $data, 'id = '.$id);
 		}else{
 			return $this->db->insert('content_cat', $data);
+		}
+	}
+
+	public function set_content($id = 0)
+	{
+		$this->load->helper('url');
+		// $description = trim($this->input->post('description'));
+		// $description = stripslashes($description);
+		// $description = htmlspecialchars($description);
+		$intro = !empty($this->input->post('intro')) ? $this->input->post('intro'): substr($this->input->post('content'), 0, 250);
+
+		$cat_ids = $this->input->post('cat_ids');
+		if(!empty($cat_ids))
+		{
+			$cat_ids = implode(',', $cat_ids);
+		}else{
+			$cat_ids = '';
+		}
+		$author = $this->session->userdata['logged_in']['username'];
+		$publish = !empty($this->input->post('publish')) ? 1:0;
+		$data = array(
+			'title' => $this->input->post('title'),
+	    'cat_ids' => $cat_ids,
+	    'keyword' => $this->input->post('keyword'),
+	    'intro' => $intro,
+	    'description' => $this->input->post('description'),
+	    'content' => $this->input->post('content'),
+	    'author' => $author,
+	    'publish' => $publish,
+			);
+		if($id > 0)
+		{
+			$this->db->update('content', $data, 'id = '.$id);
+			if($this->db->affected_rows())
+			{
+
+				if(!empty($_FILES['image']['name']))
+				{
+					// $query = $this->db->query('SELECT LAST_INSERT_ID() AS id');
+					// $data = $query->row_array();
+					// $last_id = 0;
+					// if(!empty($data))
+					// {
+					// 	$last_id = $data['id'];
+					// }
+
+					$image = $this->input->post('title').'_'.$id.'.jpg';
+					$this->db->update('content', array('image'=>$image), 'id = '.$id);
+					if($this->db->affected_rows())
+					{
+						$dir = FCPATH.'images/modules/content/'.$id.'/';
+						mkdir($dir, 0755);
+						copy($_FILES['image']['tmp_name'], $dir.$image);
+					}
+				}
+			}else{
+
+			}
+		}else{
+			$this->db->insert('content', $data);
+			if($this->db->affected_rows())
+			{
+
+				if(!empty($_FILES['image']['name']))
+				{
+					$query = $this->db->query('SELECT LAST_INSERT_ID() AS id');
+					$data = $query->row_array();
+					$last_id = 0;
+					if(!empty($data))
+					{
+						$last_id = $data['id'];
+					}
+
+					$image = $this->input->post('title').'_'.$last_id.'.jpg';
+					$this->db->update('content', array('image'=>$image), 'id = '.$last_id);
+					if($this->db->affected_rows())
+					{
+						$dir = FCPATH.'images/modules/content/'.$last_id.'/';
+						mkdir($dir, 0755);
+						copy($_FILES['image']['tmp_name'], $dir.$image);
+					}
+				}
+			}else{
+
+			}
 		}
 	}
 

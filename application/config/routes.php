@@ -68,7 +68,6 @@ $route['content/cat_edit/(:any)'] = 'content/cat_edit/$1';
 
 /*crud*/
 $route['crud/list_edit/(:any)'] = 'crud/list_edit/$1';
-$route['ckeditor'] = 'ckeditor';
 
 /*default*/
 $route['default_controller']      = 'home';

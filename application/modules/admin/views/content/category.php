@@ -18,7 +18,9 @@ $pagination = $data_cat_list['pagination'];
 $cat_list   = $data_cat_list['cat_list'];
 $id         = !empty(@intval($data_cat['id'])) ? $data_cat['id'] : '';
 $par_id     = @intval($data_cat['par_id']);
+$publish = isset($data_cat['publish']) ? $data_cat['publish'] : 1;
 pr(@$data_cat);
+// pr(@$_POST['description']);
 ?>
 <div class="col-md-4">
 	<?php echo form_open(base_url('admin/content_category/'.$id), 'id="cat_edit"');?>
@@ -51,16 +53,25 @@ pr(@$data_cat);
 				// 	'class'    => 'form-control',
 				// 	'value'    => ''));
 				// echo '			<div id="title_error"></div>';
+
 				echo form_label('description', 'description');
 				echo form_textarea(array(
 					'name'  => 'description',
-					'id'    => 'textckeditor',
+					// 'id'    => 'textckeditor',
 					'class' => 'form-control',
 					'rows'  => '2',
 					'value' => @$data_cat['description']));
+
 				echo form_label('Publish', 'publish');
-				echo '<br>';
-				echo form_checkbox('publish', @intval($data_cat['publish']), @intval($data_cat['publish'])).' Published';
+				echo '<div class="checkbox">';
+				echo '<label>';
+				echo form_checkbox(array(
+					'name' => 'publish',
+					'value'=> 'publish',
+					'checked' => $publish
+					)).' Published';
+				echo '</label>';
+				echo '</div>';
 				?>
 			</div>
 			<div class="panel panel-footer">

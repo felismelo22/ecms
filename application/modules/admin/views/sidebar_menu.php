@@ -19,6 +19,12 @@
 			<li>
 				<a href="<?php echo base_url('admin/content_category') ?>">Category</a>
 			</li>
+			<li>
+				<a href="<?php echo base_url('admin/content_edit') ?>">Add Content</a>
+			</li>
+			<li>
+				<a href="<?php echo base_url('admin/content_list') ?>">Content List</a>
+			</li>
 		</ul>
 	</li>
 </ul>

@@ -114,7 +114,6 @@ class Admin extends CI_Controller
     $this->load->library('form_validation');
 
     $this->form_validation->set_rules('title', 'Title', 'required');
-
     if ($this->form_validation->run() === FALSE)
     {
       $data['msg']           = '';
@@ -122,7 +121,6 @@ class Admin extends CI_Controller
       $data['parent']        = $this->content_model->get_cat_ids();
       $data['data_cat_list'] = $this->content_model->get_cat_list();
       $parent                = array();
-    // pr($this->db->last_query());die();
 
       foreach ($data['parent'] as $key => $value)
       {
@@ -136,20 +134,31 @@ class Admin extends CI_Controller
       }
       $this->load->view('admin/index', $data);
     }else{
-      // pr($this->input->post());
+      // echo $this->input->post('description');
       // pr($_POST);die();
       $title  = $this->input->post('title');
       $par_id = $this->input->post('par_id');
       if($id > 0)
       {
-        $row = $this->content_model->get_cat_row('WHERE id = '.$id);
+        $row = $this->content_model->get_cat_data('WHERE id = '.$id);
+        $cat_row       = $this->content_model->get_cat_data('WHERE par_id = '.$par_id.' AND title = "'.$title.'"');
+
         if($title != $row['title'])
         {
-          $cat_row       = $this->content_model->get_cat_row('WHERE par_id = '.$par_id.' AND title = "'.$title.'"');
           $data['msg']   = 'Failed Saving Data, title exist';
           $data['alert'] = 'danger';
 
           if(empty($cat_row))
+          {
+            $data['msg'] = 'Success Saving Data';
+            $data['alert'] = 'success';
+            $this->content_model->set_cat($id);
+          }
+        }else{
+          $data['msg']   = 'Failed Saving Data, title exist';
+          $data['alert'] = 'danger';
+
+          if(!empty($cat_row))
           {
             $data['msg'] = 'Success Saving Data';
             $data['alert'] = 'success';
@@ -161,7 +170,7 @@ class Admin extends CI_Controller
         // $this->content_model->set_user();
       }else{
 
-        $cat_row       = $this->content_model->get_cat_row('WHERE par_id = '.$par_id.' AND title = "'.$title.'"');
+        $cat_row       = $this->content_model->get_cat_data('WHERE par_id = '.$par_id.' AND title = "'.$title.'"');
         $data['msg']   = 'Failed Saving Data, title exist';
         $data['alert'] = 'danger';
 
@@ -193,7 +202,70 @@ class Admin extends CI_Controller
     $this->load->library('form_validation');
 
     $this->form_validation->set_rules('title', 'Title', 'required');
-    $data['test'] = '';
+
+    $data['category'] = $this->content_model->get_cat_ids();
+    $category = array();
+    $data['category_data'] = $this->content_model->get_cat_all('id,par_id,title', 'WHERE publish = 1');
+
+    foreach ($data['category'] as $key => $value)
+    {
+      $category[$value['id']] = $value['title'];
+    }
+    $data['category'] = $category;
+
+    if ($this->form_validation->run() === FALSE)
+    {
+
+    }else{
+      $data['msg'] = 'Content Saved Failed';
+      $data['alert'] = 'danger';
+      if($id > 0)
+      {
+        if(!empty($_FILES['image']['name']))
+        {
+          $type = $_FILES['image']['type'];
+          if($type != 'image/jpeg')
+          {
+            $data['msg'] = 'only upload image with jpg/jpeg format';
+            $data['alert'] = 'danger';
+          }else{
+            $data['msg'] = 'Content Saved Successfully';
+            $data['alert'] = 'success';
+            $this->content_model->set_content($id);
+          }
+        }else{
+          $data['msg'] = 'Content Saved Successfully';
+          $data['alert'] = 'success';
+          $this->content_model->set_content($id);
+        }
+      }else{
+        if(!empty($_FILES['image']['name']))
+        {
+          $type = $_FILES['image']['type'];
+          if($type != 'image/jpeg')
+          {
+            $data['msg'] = 'only upload image with jpg/jpeg format';
+            $data['alert'] = 'danger';
+          }else{
+            $data['msg'] = 'Content Saved Successfully';
+            $data['alert'] = 'success';
+            $this->content_model->set_content();
+          }
+        }else{
+          $data['msg'] = 'Content Saved Successfully';
+          $data['alert'] = 'success';
+          $this->content_model->set_content();
+        }
+
+      }
+    }
+    // pr($data);
+    $data['data'] = $this->content_model->get_content($id);
     $this->load->view('admin/index', $data);
+  }
+  public function content_list()
+  {
+    $data['data'] = $this->content_model->get_content_list();
+    $this->load->view('admin/index',$data);
   }
 }

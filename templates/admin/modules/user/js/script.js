@@ -26,17 +26,17 @@ $(document).ready(function(){
 		  },
 		});
 	});
-	$('#selectAllDel').on('click',function() {
-	  var checkedStatus = this.checked;
-	  $('input[class="del_check"]').each(function() {
-	    $(this).prop('checked', checkedStatus);
-	  });
-	});
-	$('#selectAllPub').on('click',function() {
-	  var checkedStatus = this.checked;
-	  $('input[class="pub_check"]').each(function() {
-	    $(this).prop('checked', checkedStatus);
-	  });
-	});
-	$('input[type="text"]').focus();
+	// $('#selectAllDel').on('click',function() {
+	//   var checkedStatus = this.checked;
+	//   $('input[class="del_check"]').each(function() {
+	//     $(this).prop('checked', checkedStatus);
+	//   });
+	// });
+	// $('#selectAllPub').on('click',function() {
+	//   var checkedStatus = this.checked;
+	//   $('input[class="pub_check"]').each(function() {
+	//     $(this).prop('checked', checkedStatus);
+	//   });
+	// });
+	// $('input[type="text"]').focus();
 });
