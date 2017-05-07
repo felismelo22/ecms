@@ -131,15 +131,22 @@ class Content_model extends CI_Model
 
 		$page = @intval($page)*$limit;
 		$this->db->limit($limit,$page);
+		// if($keyword != NULL)
+		// {
+		// 	$this->db->or_where(array(
+		// 														'id'=>$keyword,
+		// 														'title'=>$keyword
+		// 													));
+		// }
+		// $this->db->select('id,title');
+		// $query = $this->db->get('content');
+		// $data['data'] = $query->result_array();
+
 		if($keyword != NULL)
 		{
-			$this->db->or_where(array(
-																'id'=>$keyword,
-																'title'=>$keyword
-															));
+			$sql = ' WHERE id = "'.$keyword.'" OR title LIKE "'.$keyword.'%"';
 		}
-		// $this->db->select('id,title');
-		$query = $this->db->get('content');
+		$query = $this->db->query('SELECT * FROM `content` '.@$sql.' ORDER BY id DESC LIMIT '.$page.','.$limit);
 		$data['data'] = $query->result_array();
 
 		return $data;
@@ -239,6 +246,7 @@ class Content_model extends CI_Model
 
 					$image = $this->input->post('title').'_'.$id.'.jpg';
 					$this->db->update('content', array('image'=>$image), 'id = '.$id);
+					if(!empty($tags))
 					if($this->db->affected_rows())
 					{
 						$dir = FCPATH.'images/modules/content/'.$id.'/';
@@ -253,17 +261,15 @@ class Content_model extends CI_Model
 			$this->db->insert('content', $data);
 			if($this->db->affected_rows())
 			{
-
+				$query = $this->db->query('SELECT LAST_INSERT_ID() AS id');
+				$data = $query->row_array();
+				$last_id = 0;
+				if(!empty($data))
+				{
+					$last_id = $data['id'];
+				}
 				if(!empty($_FILES['image']['name']))
 				{
-					$query = $this->db->query('SELECT LAST_INSERT_ID() AS id');
-					$data = $query->row_array();
-					$last_id = 0;
-					if(!empty($data))
-					{
-						$last_id = $data['id'];
-					}
-
 					$image = $this->input->post('title').'_'.$last_id.'.jpg';
 					$this->db->update('content', array('image'=>$image), 'id = '.$last_id);
 					if($this->db->affected_rows())
@@ -273,10 +279,86 @@ class Content_model extends CI_Model
 						copy($_FILES['image']['tmp_name'], $dir.$image);
 					}
 				}
+
 			}else{
 
 			}
+
 		}
+
+		$tags = $this->input->post('tags');
+
+		if(!empty($tags))
+		{
+			$tags = explode(',',$tags);
+			$tags_new = $tags;
+			$last_id = !empty($last_id) ? $last_id : $id;
+			$tags_old = $this->db->get_where('content_tag_list', 'content_id = '.$last_id);
+			$tags_old = $tags_old->result_array();
+			$tags_old_ids = array();
+
+			if(!empty($tags_old))
+			{
+				foreach ($tags_old as $key => $value)
+				{
+					$tags_old_ids[] = $value['tag_id'];
+				}
+
+				$tags_old_ids = implode(',', $tags_old_ids);
+				$tags_old = $this->db->get_where('content_tag', 'id IN('.$tags_old_ids.')');
+				$tags_old = $tags_old->result_array();
+
+				if(!empty($tags_old))
+				{
+					$tags_old_title = array();
+					foreach ($tags_old as $key => $value)
+					{
+						$tags_old_title[] = $value['title'];
+						if(!in_array($value['title'], $tags))
+						{
+							$tags_new[] = $value['title'];
+						}
+					}
+				}else{
+					$tags_new = $tags;
+				}
+			}
+
+			// $tag_old = content_bot_get_data('tag_old');
+			// $tag_new = content_bot_get_data('tag_new');
+			if(!empty($tags_new))
+			{
+				// $tag_new = explode(',', $tag_new);
+				foreach ($tags_new as $key)
+				{
+					// $db->Execute('INSERT INTO content_tag SET title = "'.$key.'", total = 1');
+					$this->db->insert('content_tag', array('title'=>$key,'total'=>'1'));
+					// pr($this->db->last_query());
+
+					$query = $this->db->query('SELECT LAST_INSERT_ID() AS id');
+					$data = $query->row_array();
+					$last_tag_id = 0;
+					if(!empty($data))
+					{
+						$last_tag_id = $data['id'];
+					}
+					if(!empty($last_tag_id))
+					{
+						$this->db->insert('content_tag_list', array('tag_id'=>$last_tag_id,'content_id'=>$last_id));
+					}
+				}
+			}
+			if(!empty($tags_old))
+			{
+				// $tag_old = explode(',', $tag_old);
+				foreach ($tags_old as $key)
+				{
+					$this->db->query('UPDATE content_tag SET total = total + 1 WHERE title = "'.$key.'"');
+				}
+			}
+		}
+		// die();
+
 	}
 
 	/*del*/

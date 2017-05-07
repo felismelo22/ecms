@@ -52,7 +52,16 @@ class Admin extends CI_Controller
   /*USER*/
 	public function user_list($page = 0, $keyword = NULL)
 	{
-    if(!empty($_POST['del_user']))
+    if(!empty($this->input->post('delete')))
+    {
+      if(!empty($_POST['del_user']))
+      {
+        $this->admin_model->del_user($_POST['del_user']);
+        $data['msg']   = 'data berhasil dihapus';
+        $data['alert'] = 'success';
+      }
+    }
+    if(!empty($this->input->post('publish')))
     {
       $this->admin_model->del_user($_POST['del_user']);
       $data['msg']   = 'data berhasil dihapus';
@@ -270,7 +279,6 @@ class Admin extends CI_Controller
           $data['alert'] = 'success';
           $this->content_model->set_content();
         }
-
       }
     }
     // pr($data);
@@ -279,12 +287,23 @@ class Admin extends CI_Controller
   }
   public function content_list()
   {
-
-    if(!empty($this->input->post('id')))
+    $this->load->helper('date');
+    if(!empty($this->input->post('publish')))
     {
       $this->content_model->publish_data('content', $this->input->post('pub_content'));
       $data['msg']   = 'Content Updated Successfully';
       $data['alert'] = 'success';
+    }
+    if(!empty($this->input->post('delete')))
+    {
+      $this->content_model->del_data('content', $this->input->post('del_content'));
+      $data['msg']   = 'Content Deleted Successfully';
+      $data['alert'] = 'success';
+      if(empty($this->input->post('del_content')))
+      {
+        $data['msg']   = 'No Data selected to delete';
+        $data['alert'] = 'success';
+      }
     }
     $data['data'] = $this->content_model->get_content_list();
     $this->load->view('admin/index',$data);

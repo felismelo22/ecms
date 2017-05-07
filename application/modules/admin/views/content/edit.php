@@ -19,6 +19,7 @@ if(!empty($msg)&&!empty($alert))
 // pr($_FILES['image']['name']);
 pr(@$this->input->post());
 pr($data);
+$this->session->__set('link_js', base_url().'templates/admin/js/bootstrap-tagsinput.js');
 ?>
 <?php echo form_open_multipart(base_url('admin/content_edit/'.$id), 'id="cat_edit"');?>
 	<div class="panel panel-default">
@@ -28,6 +29,8 @@ pr($data);
 			</h4>
 		</div>
 		<div class="panel panel-body">
+			<!-- <input type="text" value="" data-role="tagsinput" id="tags" class="form-control"> -->
+			<br>
 			<?php
 			echo form_hidden('id',$id);
 			echo form_label('Title', 'title');
@@ -79,12 +82,22 @@ pr($data);
 				'id'    => 'textckeditor',
 				'class' => 'form-control',
 				'value' => @$data['content']));
-
 			echo form_label('Cagegory', 'category');
 			?>
 	 		<select name="cat_ids[]" multiple="multiple" id="cat_ids" size="<?php echo $cat_size; ?>" class="form-control">
 				<?php echo createOption($r_cat, $cat_ids);?>
 			</select><?php
+			echo form_label('Tags', 'tags');
+			echo '<br>';
+			// $data['tags'] = 'iwan,dan,kita,tidak,adkan,pernah,lupt,a,b,c,d,e,f,g,h,t,y,j,df,gdg,gdfgs,gdfg,dfg,sg,fgs,gsd,fgsdf,gdf,gdfgdsgfd,sgds,gds,dsg,sdg,sdf,gd,fgdf,ds,gfdsf,sfg';
+			echo form_input(array(
+				'name'     => 'tags',
+				'data-role' => 'tagsinput',
+				'class'    => 'form-control',
+				'value'    => @$data['tags']));
+			echo '<br>';
+			echo '<span>separate tags with commas</span>';
+			echo '<br>';
 			echo form_label('Publish', 'publish');
 			echo '<div class="checkbox">';
 			echo '<label>';
